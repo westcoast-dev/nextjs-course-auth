@@ -15,10 +15,11 @@ async function handler(req, res) {
   }
 
   const userEmail = session.user.email;
-  const oldPassword = req.body.oldPassword;
-  const newPassword = req.body.newPassword;
+  const oldPassword = req.body.oldPw;
+  const newPassword = req.body.newPw;
 
   const client = await connectToDatabase();
+
   const usersCollection = client.db().collection("users");
 
   const user = await usersCollection.findOne({ email: userEmail });
@@ -31,15 +32,15 @@ async function handler(req, res) {
 
   const currentPassword = user.password;
 
-  const passwordsAreEqual = verifyPassword(oldPassword, currentPassword);
+  const passwordsAreEqual = await verifyPassword(oldPassword, currentPassword);
 
   if (!passwordsAreEqual) {
-    res.status(403).json({ message: "Invalid password!" });
+    res.status(403).json({ message: "Invalid password." });
     client.close();
     return;
   }
 
-  const hashedPassword = hashPassword(newPassword);
+  const hashedPassword = await hashPassword(newPassword);
 
   const result = await usersCollection.updateOne(
     { email: userEmail },

@@ -11,6 +11,8 @@ function ProfileForm(props) {
     const enteredOldPw = oldRef.current.value;
     const enteredNewPw = newRef.current.value;
 
+    console.log(enteredOldPw, enteredNewPw);
+
     props.onChangePw({
       oldPw: enteredOldPw,
       newPw: enteredNewPw,
